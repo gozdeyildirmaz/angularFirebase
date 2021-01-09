@@ -1,0 +1,29 @@
+<div class="container mt-sm-5">
+  <div class="row justify-content-md-center">
+    <p>If you have not signed up yet, <a class="nav-link d-inline-block p-0" routerLink="/signup">sign up</a> here.</p>
+  </div>
+  <div class="row justify-content-md-center">
+    <div class="col col-lg-4">
+      <span *ngIf="showUserNotFound"  class="text-danger">User is not found. Please <a [routerLink]="['/signup']">Sign Up</a></span>
+      <span *ngIf="showWrongSomething"  class="text-danger">Email or password is wrong!</span>
+
+
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email</label>
+          <input formControlName="email" type="email" class="form-control" id="exampleInputEmail1"
+                 aria-describedby="emailHelp" placeholder="Enter email">
+          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input formControlName="password" type="password" class="form-control" id="exampleInputPassword1"
+                 placeholder="Password">
+        </div>
+        <button type="submit" [disabled]="!loginForm.valid" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+
+</div>
+
