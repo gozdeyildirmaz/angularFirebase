@@ -8,6 +8,14 @@ export class GlobalConstants {
   static getUser(): User {
     return GlobalConstants.userInfo;
   }
+
+  static canRouteAdmin(): boolean {
+    return this.userInfo.role === 1;
+  }
+
+  static canRouteEditor(): boolean {
+    return this.userInfo.role === 2;
+  }
 }
 
 class User {

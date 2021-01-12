@@ -112,8 +112,11 @@ app.use((req, res, next) => {
 
   } else if (req.method == 'POST' && req.url == "/sessionLogout") {
     const sessionCookie = req.cookies.session || '';
+    console.log("session cookie: " +sessionCookie);
 console.log("sessionLogout nodejs")
     res.clearCookie('session');
+    console.log("session cookie2: " +sessionCookie);
+
     admin
       .auth()
       .verifySessionCookie(sessionCookie)
@@ -127,12 +130,12 @@ console.log("sessionLogout nodejs")
          admin.auth().revokeRefreshTokens(decodedClaims.sub);
       })
       .then(() => {
-        console.log("/login");
+        console.log("/logout");
          // res.redirect('/login');
         res.end(JSON.stringify({status: 'success'}));
       })
       .catch((error) => {
-        console.log("/login error");
+        console.log("/logout error");
         res.end(JSON.stringify({status: 'fail'}));
       });
 

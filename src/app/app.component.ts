@@ -26,32 +26,19 @@ export class AppComponent {
     this.users = firestore.collection('users').valueChanges();
     this.showNavbar = false;
 
-    this.router.events.pipe(
-      filter<NavigationEnd>(e => e instanceof NavigationEnd)
-    ).subscribe(
-      // e is inferred as NaviagtionEnd
-      e => {
-        console.log('URL :', e.urlAfterRedirects);
-        if (e.urlAfterRedirects !== '/login' && e.urlAfterRedirects !== '/signup') {
-          this.showNavbar = true;
-          // debugger;
-          // if (GlobalConstants.getUser() == null) {
-          //   this.authService.getUserByEmail(window.sessionStorage.getItem('userEmail'))
-          //     .subscribe(ss => {
-          //       let user: any;
-          //       ss.docs.forEach(doc => {
-          //         user = doc.data();
-          //         GlobalConstants.keepUser(user);
-          //       });
-          //     });
-          // }
-
-
-        } else {
-          this.showNavbar = false;
-        }
-      }
-    );
+    // this.router.events.pipe(
+    //   filter<NavigationEnd>(e => e instanceof NavigationEnd)
+    // ).subscribe(
+    //   // e is inferred as NaviagtionEnd
+    //   e => {
+    //     if (e.urlAfterRedirects !== '/login' && e.urlAfterRedirects !== '/signup') {
+    //       this.showNavbar = true;
+    //
+    //     } else {
+    //       this.showNavbar = false;
+    //     }
+    //   }
+    // );
   }
 
 

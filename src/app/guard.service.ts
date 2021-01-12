@@ -1,9 +1,18 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
-import {Observable} from 'rxjs';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  NavigationEnd,
+  NavigationStart,
+  ActivationStart,
+  Router,
+  RouterStateSnapshot,
+  UrlTree, ActivatedRoute
+} from '@angular/router';
+import {Observable, ObservableInput} from 'rxjs';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {AuthService} from './auth.service';
-import {map} from 'rxjs/operators';
+import {combineAll, concatMap, filter, map} from 'rxjs/operators';
 import {GlobalConstants} from './global-constants';
 
 @Injectable({
@@ -11,7 +20,7 @@ import {GlobalConstants} from './global-constants';
 })
 export class GuardService implements CanActivate {
 
-  constructor(public authService: AuthService, public router: Router) {
+  constructor(public authService: AuthService, public router: Router, public route: ActivatedRoute) {
   }
 
   canActivate(
@@ -31,30 +40,171 @@ export class GuardService implements CanActivate {
     // sayfa f5'lendiğinde GlobalConstants daki user bilgisi yok olacağı için o durumu konrol edip user yok ise tekrar doldurma işlemini yaptık
     // böylece her an GlobalConstants altında user'ımız mevcut oldu.
 
-    if (this.router.url !== '/login' && this.router.url !== '/signup') {
+    const authService = this.authService;
+
+    const url = route.url[0].path;
+
+    if (url !== 'login' && url !== 'signup' && url !== '/') {
       if (GlobalConstants.getUser() == null) {
-        this.authService.getUserByEmail(window.sessionStorage.getItem('userEmail'))
-          .subscribe(ss => {
+
+
+        let res = authService.verifySession().pipe(
+          map((response) => {
+            return response.status;
+          }),
+          concatMap((response) => {
+            if (response === 'fail') {
+              return response;
+            }
+            return authService.getUserByEmail(window.sessionStorage.getItem('userEmail'));
+
+            //   .pipe(map((ss) => {
+            //
+            //   let user: any;
+            //   ss.docs.forEach(doc => {
+            //     user = doc.data();
+            //     GlobalConstants.keepUser(user);
+            //     if ((url === 'admin' && GlobalConstants.canRouteAdmin()) || (url === 'editor' && GlobalConstants.canRouteEditor()) || url === 'home') {
+            //       return true;
+            //     } else if ((url === 'admin' && !GlobalConstants.canRouteAdmin()) || (url === 'editor' && !GlobalConstants.canRouteEditor())) {
+            //       return 'home';
+            //     }
+            //   });
+            //
+            // }));
+
+          }),
+          map((response) => {
             let user: any;
-            ss.docs.forEach(doc => {
-              user = doc.data();
-              GlobalConstants.keepUser(user);
-            });
-          });
+            user = response.docs[0].data();
+            GlobalConstants.keepUser(user);
+            if ((url === 'admin' && GlobalConstants.canRouteAdmin()) || (url === 'editor' && GlobalConstants.canRouteEditor()) || url === 'home') {
+              return true;
+            } else if ((url === 'admin' && !GlobalConstants.canRouteAdmin()) || (url === 'editor' && !GlobalConstants.canRouteEditor())) {
+              return 'home';
+            }
+
+          })
+        );
+
+
+        res.subscribe(x => {
+            console.log(x);
+          }
+        );
+
+
+// return authService.verifySession().pipe(map((res) => {
+//   console.log(res);
+//   if (res.status === 'success') {
+//     // return true;
+//
+//
+//     return authService.getUserByEmail(window.sessionStorage.getItem('userEmail'))
+//       .pipe(map(ss => {
+//         let user: any;
+//         ss.docs.forEach(doc => {
+//           user = doc.data();
+//           GlobalConstants.keepUser(user);
+//           if ((url === 'admin' && GlobalConstants.canRouteAdmin()) || (url === 'editor' && GlobalConstants.canRouteEditor()) || url === 'home') {
+//             return true;
+//           } else if ((url === 'admin' && !GlobalConstants.canRouteAdmin()) || (url === 'editor' && !GlobalConstants.canRouteEditor())) {
+//             this.router.navigate(['/home']);
+//           }
+//
+//         });
+//       }));
+//
+//
+//   } else {
+//     this.router.navigate(['/login']);
+//     // return false;
+//   }
+// }));
+
+
+// this.authService.getUserByEmail(window.sessionStorage.getItem('userEmail'))
+//   .subscribe(ss => {
+//     let user: any;
+//     ss.docs.forEach(doc => {
+//       user = doc.data();
+//       GlobalConstants.keepUser(user);
+//       if ((url === 'admin' && GlobalConstants.canRouteAdmin()) || (url === 'editor' && GlobalConstants.canRouteEditor()) || url === 'home') {
+//         return authService.verifySession().pipe(map((res) => {
+//           console.log(res);
+//           if (res.status === 'success') {
+//             return true;
+//           } else {
+//             this.router.navigate(['/login']);
+//           }
+//         }));
+//       } else if ((url === 'admin' && !GlobalConstants.canRouteAdmin()) || (url === 'editor' && !GlobalConstants.canRouteEditor())) {
+//         this.router.navigate(['/home']);
+//       }
+//
+//     });
+//   });
+
+
+      } else {
+        if ((url === 'admin' && GlobalConstants.canRouteAdmin()) || (url === 'editor' && GlobalConstants.canRouteEditor()) || url === 'home') {
+          return this.authService.verifySession().pipe(map((res) => {
+            console.log(res);
+            if (res.status === 'success') {
+              return true;
+            } else {
+              this.router.navigate(['/login']);
+              // return false;
+            }
+          }));
+        } else if ((url === 'admin' && !GlobalConstants.canRouteAdmin()) || (url === 'editor' && !GlobalConstants.canRouteEditor())) {
+          this.router.navigate(['/home']);
+        }
       }
+    } else { // login veya signup ise
+      // this.router.navigate(['/' + url]);
+      return true;
     }
 
 
-    return this.authService.verifySession().pipe(map((res) => {
-      console.log(res);
-      if (res.status === 'success') {
-        return true;
-      } else {
-        this.router.navigate(['/login']);
-        // return false;
-      }
-    }));
-
+// this.router.events.pipe(
+//   filter<NavigationStart>(e => e instanceof NavigationStart)
+// ).subscribe(
+//   e => {
+//     console.log('URL :', e.url);
+//     // console.log('URL AFTER:', e.urlAfterRedirects);
+//     //
+//     //
+//     // if (e.urlAfterRedirects !== '/login' && e.urlAfterRedirects !== '/signup' && e.urlAfterRedirects !== '/') {
+//     //   if (GlobalConstants.getUser() == null) {
+//     //     this.authService.getUserByEmail(window.sessionStorage.getItem('userEmail'))
+//     //       .subscribe(ss => {
+//     //         let user: any;
+//     //         ss.docs.forEach(doc => {
+//     //           user = doc.data();
+//     //           GlobalConstants.keepUser(user);
+//     //         });
+//     //       });
+//     //   }
+//     //
+//     //
+//     //   return this.authService.verifySession().pipe(map((res) => {
+//     //     console.log(res);
+//     //     if (res.status === 'success') {
+//     //       return true;
+//     //     } else {
+//     //       this.router.navigate(['/login']);
+//     //       return false;
+//     //     }
+//     //   }));
+//     // } else {
+//     //   return true;
+//     // }
+//
+//
+//   }
+// );
+// // return false;
 
   }
 }

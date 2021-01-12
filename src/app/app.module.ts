@@ -18,9 +18,9 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {NavbarComponent} from './navbar/navbar.component';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {GuardService} from './guard.service';
-import { HttpClientModule } from '@angular/common/http';
-import { AdminComponent } from './admin/admin.component';
-import { EditorComponent } from './editor/editor.component';
+import {HttpClientModule} from '@angular/common/http';
+import {AdminComponent} from './admin/admin.component';
+import {EditorComponent} from './editor/editor.component';
 
 
 @NgModule({
@@ -42,12 +42,12 @@ import { EditorComponent } from './editor/editor.component';
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     RouterModule.forRoot([
-      {path: 'login', component: LoginComponent},
-      {path: 'signup', component: SignupComponent},
+      {path: 'login', component: LoginComponent, canActivate: [GuardService]}, // canActivate hepsine yazıldı içinde url e göre kontroller var
+      {path: 'signup', component: SignupComponent, canActivate: [GuardService]},
       {path: 'home', component: HomeComponent, canActivate: [GuardService]},
-      {path: 'editor', component: EditorComponent},
-      {path: 'admin', component: AdminComponent},
-      {path: '**', redirectTo: '/login'},
+      {path: 'editor', component: EditorComponent, canActivate: [GuardService]},
+      {path: 'admin', component: AdminComponent, canActivate: [GuardService]},
+      {path: '**', redirectTo: '/login'}
     ]),
     FontAwesomeModule
 
