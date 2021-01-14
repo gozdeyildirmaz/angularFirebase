@@ -24,7 +24,6 @@ export class NavbarComponent implements OnInit {
 
   constructor(public auth: AngularFireAuth, public router: Router, public authService: AuthService) {
 
-    this.username = window.sessionStorage.getItem('username');
 
     this.router.events.pipe(
       filter<NavigationEnd>(e => e instanceof NavigationEnd)
@@ -33,6 +32,7 @@ export class NavbarComponent implements OnInit {
         debugger;
         console.log('URL :', e.urlAfterRedirects);
         if (e.urlAfterRedirects !== '/login' && e.urlAfterRedirects !== '/signup') {
+          this.username = window.sessionStorage.getItem('username');
           this.currentHome = false;
           this.currentEditor = false;
           this.currentAdmin = false;
@@ -41,10 +41,12 @@ export class NavbarComponent implements OnInit {
 
           if (e.urlAfterRedirects === '/admin') {
             this.currentAdmin = true;
+            console.log("admin ",  this.currentAdmin);
           } else if (e.urlAfterRedirects === '/editor') {
             this.currentEditor = true;
+          } else {
+            this.currentHome = true;
           }
-
 
 
           if (GlobalConstants.canRouteEditor()) {
@@ -67,7 +69,7 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
-
+    this.showNavbar = false;
     this.authService.logout().subscribe(res => {
       debugger;
       console.error('LOGOUT başarılı: ');

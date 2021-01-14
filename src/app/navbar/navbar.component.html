@@ -7,15 +7,15 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
-      <li class="nav-item"  [ngClass]="{'active': currentHome}">
+      <li class="nav-item"  [ngClass]="{'active': currentHome==true}">
         <a class="nav-link" routerLink="/home">Home</a>
       </li>
       <!--      ng-if="showEditorTool" ler sonradan eklenecek videoda dikkat et-->
-      <li class="nav-item" *ngIf="showEditorTool">
+      <li class="nav-item" *ngIf="showEditorTool" [ngClass]="{'active': currentEditor==true}">
         <a class="nav-link" routerLink="/editor">Editor Tool</a>
       </li>
       <!--      ng-if="showEditorTool" ler sonradan eklenecek videoda dikkat et-->
-      <li class="nav-item" *ngIf="showAdminTool">
+      <li class="nav-item" *ngIf="showAdminTool" [ngClass]="{'active': currentAdmin==true}">
         <a class="nav-link" routerLink="/admin">Admin Tool</a>
       </li>
 

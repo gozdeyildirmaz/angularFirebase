@@ -9,11 +9,12 @@ import {
   RouterStateSnapshot,
   UrlTree, ActivatedRoute
 } from '@angular/router';
-import {Observable, ObservableInput} from 'rxjs';
+import {Observable, ObservableInput, throwError} from 'rxjs';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {AuthService} from './auth.service';
-import {combineAll, concatMap, filter, map} from 'rxjs/operators';
+import {catchError, combineAll, concatMap, filter, map, tap} from 'rxjs/operators';
 import {GlobalConstants} from './global-constants';
+import {hasProperties} from 'codelyzer/util/astQuery';
 
 @Injectable({
   providedIn: 'root'
@@ -47,51 +48,54 @@ export class GuardService implements CanActivate {
     if (url !== 'login' && url !== 'signup' && url !== '/') {
       if (GlobalConstants.getUser() == null) {
 
+        return authService.verifySession().pipe(
+          tap((response) => { // tap response u olduğu gibi dönüyor??
+            if (response.status === 'fail') {
+              throw ("fail");
+            }
 
-        let res = authService.verifySession().pipe(
-          map((response) => {
-            return response.status;
+            // return response.status;
           }),
           concatMap((response) => {
-            if (response === 'fail') {
-              return response;
-            }
             return authService.getUserByEmail(window.sessionStorage.getItem('userEmail'));
-
-            //   .pipe(map((ss) => {
-            //
-            //   let user: any;
-            //   ss.docs.forEach(doc => {
-            //     user = doc.data();
-            //     GlobalConstants.keepUser(user);
-            //     if ((url === 'admin' && GlobalConstants.canRouteAdmin()) || (url === 'editor' && GlobalConstants.canRouteEditor()) || url === 'home') {
-            //       return true;
-            //     } else if ((url === 'admin' && !GlobalConstants.canRouteAdmin()) || (url === 'editor' && !GlobalConstants.canRouteEditor())) {
-            //       return 'home';
-            //     }
-            //   });
-            //
-            // }));
-
           }),
-          map((response) => {
+          map((response): any => {
+
             let user: any;
-            user = response.docs[0].data();
+            user = response['docs'][0].data();
             GlobalConstants.keepUser(user);
             if ((url === 'admin' && GlobalConstants.canRouteAdmin()) || (url === 'editor' && GlobalConstants.canRouteEditor()) || url === 'home') {
               return true;
             } else if ((url === 'admin' && !GlobalConstants.canRouteAdmin()) || (url === 'editor' && !GlobalConstants.canRouteEditor())) {
-              return 'home';
+              // return 'home';
+              this.router.navigate(['/home']);
             }
 
+
+          }),
+          catchError((err) => {
+            this.router.navigate(['/login']);
+            return err;
+          }),
+          map(final => {
+            if (final === true) {
+              return true;
+            }
           })
         );
 
 
-        res.subscribe(x => {
-            console.log(x);
-          }
-        );
+        // res.pipe(map(x => {
+        //     console.log(x);
+        //     if (x === 'fail') {
+        //       return false;
+        //     } else if (x === true) {
+        //       return true;
+        //     } else if (x === 'home') {
+        //       this.router.navigate(['/home']);
+        //     }
+        //   })
+        // );
 
 
 // return authService.verifySession().pipe(map((res) => {
