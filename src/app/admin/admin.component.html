@@ -1,1 +1,10 @@
-<p>admin works!</p>
+<div class="container container-fluid">
+  <p>User List</p>
+  <div class="custom-control custom-switch" *ngFor="let user of users; index as i; first as isFirst">
+    <input type="checkbox" class="custom-control-input" [checked]="user.role==2" (change)="checkChange(user)"  id="customSwitch{{i}}">
+    <label class="custom-control-label" for="customSwitch{{i}}">{{user.name}} {{user.surname}}</label>
+  </div>
+</div>
+
+
+

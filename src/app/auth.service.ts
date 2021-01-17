@@ -1,14 +1,16 @@
 import {Injectable} from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {defer, from, Observable} from 'rxjs';
-import {AngularFirestore} from '@angular/fire/firestore';
+import {AngularFirestore, AngularFirestoreDocument} from '@angular/fire/firestore';
 import {UrlTree} from '@angular/router';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {map, take} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  public itemDoc: AngularFirestoreDocument<any>;
 
   constructor(public auth: AngularFireAuth, public firestore: AngularFirestore, public http: HttpClient) {
   }
@@ -52,6 +54,31 @@ export class AuthService {
 
   getUserByEmail(email: string): Observable<any> {
     return this.firestore.collection('users', ref => ref.where('email', '==', email)).get();
+  }
+
+  getAllUsers(): Observable<any> {
+    return this.firestore.collection('users', ref => ref.where('role', '>', 1).orderBy('role')).snapshotChanges();
+  }
+
+  updateUserRole(userid, newrole): void {
+
+    /*
+    * You would use .snapshotChanges() whenever you want to get the metadata of a doc (e.g. DocumentID)
+    * and .valueChanges() when you need the data within the doc. You can't get document data from .snapshotChanges().
+    * */
+
+
+    // const tutorialsRef = this.firestore.collection('users', ref => ref.where('id', '==', userid));
+    const tutorialsRef = this.firestore.collection('users', ref => ref.where('id', '==', userid)).snapshotChanges().pipe(
+      take(1), // take olmayınca snapshotChanges'da data her değiştiğinde buraya düşüyor 1 kere düşssün diye yapıldı. snapshotChanges  yerine başka bişe kullansaydık bu sefer docId yi yakalayamıyorduk o yğzden mecbur
+      map(actions => actions.map(a => {
+        const data = a.payload.doc.data();
+        const id = a.payload.doc.id;
+        return id;
+      }))).subscribe((docId: any) => {
+      // let id = _doc[0].payload.doc.id; //first result of query [0]
+      this.firestore.doc(`users/${docId}`).update({role: newrole});
+    });
   }
 
   createUserWithEmailAndPassword(email: string, password: string): Observable<any> {

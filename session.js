@@ -74,8 +74,8 @@ app.use((req, res, next) => {
       res.status(401).send('UNAUTHORIZED REQUEST11!');
       return;
     }
-    // const expiresIn = 60 * 60 * 24 * 5 * 1000;
-    const expiresIn = 60 * 5 * 1000; // 5dk
+     const expiresIn = 60 * 60 * 24 * 5 * 1000;
+    // const expiresIn = 60 * 5 * 1000; // 5dk
 
     admin
       .auth()
