@@ -20,6 +20,12 @@ admin.initializeApp({
 });
 
 app.use(express.static('angular-firebase')); // myApp will be the same folder name.
+
+app.get('/', cors({credentials: true}), function (req, res, next) {
+
+  res.status(200).send({status: "running"});
+});
+
 app.get('/init', cors({credentials: true}), function (req, res, next) {
   console.log("GET YAKALANDI");
   res.cookie("csrfToken", myCsrfToken);

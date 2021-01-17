@@ -5,6 +5,7 @@ import * as myModule from '../../assets/js/readapi-automator.js';
 import firebase from 'firebase/app';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {Router} from '@angular/router';
+import {AuthService} from '../auth.service';
 
 
 // declare global {
@@ -24,18 +25,27 @@ import {Router} from '@angular/router';
 })
 
 
-export class HomeComponent implements OnInit {
+export class HomeComponent {
   username = '';
+  books: [];
 
-  constructor(library: FaIconLibrary, private router: Router, public auth: AngularFireAuth) {
+  constructor(library: FaIconLibrary, private router: Router, public auth: AngularFireAuth, private authService: AuthService) {
 
 
     library.addIcons(fasUser);
+    this.authService.getAllBooks().subscribe(books => {
+      this.books = books;
+
+      setTimeout(() => { // this i kullanabilmek için arrow function
+        this.callAPI();
+      }, 0);
+    });
 
 
   }
 
-  ngOnInit(): void {
+
+  public callAPI(): void {
     const q = myModule.ol_readapi_automator.create_query();
     myModule.ol_readapi_automator.do_query(q);
   }

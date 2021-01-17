@@ -29,7 +29,6 @@ export class NavbarComponent implements OnInit {
       filter<NavigationEnd>(e => e instanceof NavigationEnd)
     ).subscribe(
       e => {
-        debugger;
         console.log('URL :', e.urlAfterRedirects);
         if (e.urlAfterRedirects !== '/login' && e.urlAfterRedirects !== '/signup') {
           this.username = window.sessionStorage.getItem('username');
@@ -37,6 +36,8 @@ export class NavbarComponent implements OnInit {
           this.currentEditor = false;
           this.currentAdmin = false;
           this.showNavbar = true;
+          this.showEditorTool = false;
+          this.showAdminTool = false;
 
 
           if (e.urlAfterRedirects === '/admin') {
@@ -71,13 +72,11 @@ export class NavbarComponent implements OnInit {
   logout(): void {
     this.showNavbar = false;
     this.authService.logout().subscribe(res => {
-      debugger;
       console.error('LOGOUT başarılı: ');
       this.router.navigate(['/login']);
 
 
     }, err => {
-      debugger;
 
       console.error('Error: ' + err);
     });

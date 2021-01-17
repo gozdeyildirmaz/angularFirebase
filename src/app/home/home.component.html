@@ -1,34 +1,27 @@
+<div class="container container-fluid">
 
-  <div class="container container-fluid">
-
-    <div class="card">
-      <div class="card-header">
-        Kitap Listesi
-      </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item" style="display: flex; justify-content: space-between">
-          <span>The Log of a Cowboy - Andy Adams, 1903</span>
-          <div class="ol_readapi_book"
-               lccn="03012817" oclc="03544699">
-          </div>
-        </li>
-        <li class="list-group-item" style="display: flex; justify-content: space-between">
-          <span>The Montessori Method - Maria Montessori, 1912</span>
-          <div class="ol_readapi_book"
-               oclc="1181252">
-          </div>
-        </li>
-        <li class="list-group-item" style="display: flex; justify-content: space-between">
-          <span>Little Wars - H. G. Wells, 1913</span>
-          <div class="ol_readapi_book"
-               olid="OL7142194M">
-          </div>
-        </li>
-      </ul>
+  <div class="card">
+    <div class="card-header">
+      Kitap Listesi
     </div>
-
-
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item d-flex justify-content-between"
+          *ngFor="let book of books; index as i; first as isFirst">
+        <span>{{book.title}}</span>
+        <!--          Attribute binding bu şekilde oluyor-->
+        <div id="{{book.olid}}" class="ol_readapi_book" [attr.olid]="book.olid">
+        </div>
+      </li>
+      <!--        <li class="list-group-item" style="display: flex; justify-content: space-between">-->
+      <!--          <span>mee</span>-->
+      <!--          <div class="ol_readapi_book" olid="OL20610682M">-->
+      <!--          </div>-->
+      <!--        </li>-->
+    </ul>
   </div>
+
+
+</div>
 
 
 

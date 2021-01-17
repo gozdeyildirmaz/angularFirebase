@@ -95,6 +95,31 @@ export class AuthService {
     });
   }
 
+  addBook(title: string, olid: string): Promise<any> {
+    return this.firestore.collection('books').add({
+      title,
+      olid
+    });
+  }
+
+  deleteBook(olid: string): void {
+
+    const tutorialsRef = this.firestore.collection('books', ref => ref.where('olid', '==', olid)).snapshotChanges().pipe(
+      take(1), // take olmayınca snapshotChanges'da data her değiştiğinde buraya düşüyor 1 kere düşssün diye yapıldı. snapshotChanges  yerine başka bişe kullansaydık bu sefer docId yi yakalayamıyorduk o yğzden mecbur
+      map(actions => actions.map(a => {
+        const data = a.payload.doc.data();
+        const id = a.payload.doc.id;
+        return id;
+      }))).subscribe((docId: any) => {
+      // let id = _doc[0].payload.doc.id; //first result of query [0]
+      this.firestore.doc(`books/${docId}`).delete();
+    });
+  }
+
+  getAllBooks(): Observable<any> {
+    return this.firestore.collection('books').valueChanges();
+  }
+
   verifySession(): Observable<any> {
 
     const headers = new HttpHeaders({

@@ -1,1 +1,35 @@
-<p>editor works!</p>
+<div class="container container-fluid">
+  <p>Add Book</p>
+
+  <form [formGroup]="bookForm" (ngSubmit)="addBook()">
+    <div class="form-group">
+      <label for="exampleInputTitle">Book Title</label>
+      <input formControlName="title" type="text" class="form-control" id="exampleInputTitle"
+             aria-describedby="emailHelp"
+             placeholder="Enter book title">
+    </div>
+    <div class="form-group">
+      <label for="exampleInputOLID">Open Library ID</label>
+      <input formControlName="olid" type="text" class="form-control" id="exampleInputOLID"
+             placeholder="Enter open library id">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  <br>
+  <br>
+
+  <div class="card">
+    <div class="card-header">
+      Book List
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item d-flex justify-content-between" id="{{book.olid}}"
+          *ngFor="let book of books; index as i; first as isFirst">
+        <span>{{book.title}}</span>
+        <button type="button" class="btn btn-danger" (click)="deleteBook(book.olid)">Delete</button>
+      </li>
+    </ul>
+  </div>
+
+
+</div>
