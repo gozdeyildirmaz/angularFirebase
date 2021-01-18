@@ -48,6 +48,7 @@ app.get('/init', cors({credentials: true}), function (req, res, next) {
    */
 
   res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
+  res.header('Access-Control-Allow-Origin', 'https://gozdeyildirmaz.github.io/angularFirebase');
   res.status(200).send({csrfToken: myCsrfToken});
 });
 
@@ -55,6 +56,7 @@ app.use((req, res, next) => {
 
 
   res.header("Access-Control-Allow-Origin", 'http://localhost:4200');
+  res.header("Access-Control-Allow-Origin", 'https://gozdeyildirmaz.github.io/angularFirebase');
   res.header('Access-Control-Allow-Credentials', true);
   res.header(
     "Access-Control-Allow-Headers",
@@ -151,5 +153,6 @@ console.log("sessionLogout nodejs")
 });
 
 
-app.listen(8080, 'localhost');
+// app.listen(8080, 'localhost');
+app.listen(8080, 'https://gozdeyildirmaz.github.io/angularFirebase');
 console.log('MyProject Server is Listening on port 8080');
