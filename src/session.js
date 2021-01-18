@@ -153,6 +153,6 @@ console.log("sessionLogout nodejs")
 });
 
 
-app.listen(8080, 'localhost');
-// app.listen(8080, 'https://gozdeyildirmaz.github.io/angularFirebase');
+// app.listen(8080, 'localhost');
+app.listen(8080, 'https://gozdeyildirmaz.github.io/angularFirebase');
 console.log('MyProject Server is Listening on port 8080');
