@@ -11,8 +11,8 @@ import {map, take} from 'rxjs/operators';
 })
 export class AuthService {
   public itemDoc: AngularFirestoreDocument<any>;
-  // public nodeServerUrl = 'http://localhost:8080';
-  public nodeServerUrl = 'https://gozdeyildirmaz.github.io/angularFirebase';
+  public nodeServerUrl = 'http://localhost:8080';
+  // public nodeServerUrl = 'https://gozdeyildirmaz.github.io/angularFirebase';
 
   constructor(public auth: AngularFireAuth, public firestore: AngularFirestore, public http: HttpClient) {
   }

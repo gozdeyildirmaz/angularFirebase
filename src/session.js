@@ -11,8 +11,8 @@ app.use(cookieParser());
 
 
 const myCsrfToken = "itismytestcookie"; //burası normalde dinamik değişmeli araştır
-var admin = require("./node_modules/firebase-admin"); //npm i firebase-admin indir önce
-var serviceAccount = require("./angularconnection-b3402-firebase-adminsdk-gotkq-498134f5f1.json");
+var admin = require("firebase-admin"); //npm i firebase-admin indir önce
+var serviceAccount = require("../angularconnection-b3402-firebase-adminsdk-gotkq-498134f5f1.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

@@ -24,8 +24,8 @@ export class LoginComponent implements OnInit {
   showWrongSomething = false;
   firestore: any;
   db: any;
-  // nodeServerUrl = 'http://localhost:8080';
-  nodeServerUrl = 'https://gozdeyildirmaz.github.io/angularFirebase';
+  nodeServerUrl = 'http://localhost:8080';
+  // nodeServerUrl = 'https://gozdeyildirmaz.github.io/angularFirebase';
 
   constructor(private router: Router, firestore: AngularFirestore, db: AngularFireDatabase, public auth: AngularFireAuth, public authService: AuthService, public http: HttpClient) {
     this.firestore = firestore;
