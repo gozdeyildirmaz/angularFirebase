@@ -24,6 +24,8 @@ export class LoginComponent implements OnInit {
   showWrongSomething = false;
   firestore: any;
   db: any;
+  // nodeServerUrl = 'http://localhost:8080';
+  nodeServerUrl = 'https://gozdeyildirmaz.github.io/angularFirebase';
 
   constructor(private router: Router, firestore: AngularFirestore, db: AngularFireDatabase, public auth: AngularFireAuth, public authService: AuthService, public http: HttpClient) {
     this.firestore = firestore;
@@ -31,7 +33,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.http.get('http://localhost:8080/init', {withCredentials: true}).subscribe();
+    this.http.get(this.nodeServerUrl + '/init', {withCredentials: true}).subscribe();
   }
 
   login() {
@@ -49,7 +51,7 @@ export class LoginComponent implements OnInit {
         // CSRF protection should be taken into account.
         // ...
         const csrfToken = this.getCookie('csrfToken');
-        this.http.post<any>('http://localhost:8080/sessionLogin', {
+        this.http.post<any>(this.nodeServerUrl + '/sessionLogin', {
           'idToken': idToken,
           'csrfToken': csrfToken
         }, {headers: headers, withCredentials: true}).subscribe(data => {

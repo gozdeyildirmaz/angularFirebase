@@ -11,6 +11,8 @@ import {map, take} from 'rxjs/operators';
 })
 export class AuthService {
   public itemDoc: AngularFirestoreDocument<any>;
+  // public nodeServerUrl = 'http://localhost:8080';
+  public nodeServerUrl = 'https://gozdeyildirmaz.github.io/angularFirebase';
 
   constructor(public auth: AngularFireAuth, public firestore: AngularFirestore, public http: HttpClient) {
   }
@@ -34,7 +36,7 @@ export class AuthService {
 
   logout(): Observable<any> {
     console.log('sessionLogout çağrıldı');
-    return this.http.post<any>('http://localhost:8080/sessionLogout', {}, {withCredentials: true});
+    return this.http.post<any>(this.nodeServerUrl + '/sessionLogout', {}, {withCredentials: true});
 
     // return defer(() => from(this.auth.signOut()));
   }
@@ -125,6 +127,6 @@ export class AuthService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    return this.http.post<any>('http://localhost:8080/verifySession', {}, {headers: headers, withCredentials: true});
+    return this.http.post<any>(this.nodeServerUrl + '/verifySession', {}, {headers: headers, withCredentials: true});
   }
 }
