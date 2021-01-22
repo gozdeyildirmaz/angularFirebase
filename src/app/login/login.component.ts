@@ -52,8 +52,7 @@ export class LoginComponent implements OnInit {
         // ...
         const csrfToken = this.getCookie('csrfToken');
         this.http.post<any>(this.nodeServerUrl + '/sessionLogin', {
-          'idToken': idToken,
-          'csrfToken': csrfToken
+          'idToken': idToken
         }, {headers: headers, withCredentials: true}).subscribe(data => {
           // this.postId = data.id;
           this.router.navigate(['/home']);

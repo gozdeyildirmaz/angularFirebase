@@ -31,7 +31,7 @@ export var ol_readapi_automator =
 // Find all book divs and concatenate ids from them to create a read
 // API query url
     function create_query() {
-      var q = 'http://openlibrary.org/api/volumes/brief/json/';
+      var q = 'https://openlibrary.org/api/volumes/brief/json/';
 
       function add_el(i, el) {
         // tag with number found so it's easy to discover later
@@ -59,11 +59,11 @@ export var ol_readapi_automator =
     function make_read_button(bookdata) {
       var buttons = {
         'full access':
-          "http://openlibrary.org/images/button-read-open-library.png",
+          "https://openlibrary.org/images/button-read-open-library.png",
         'lendable':
-          "http://openlibrary.org/images/button-borrow-open-library.png",
+          "https://openlibrary.org/images/button-borrow-open-library.png",
         'checked out':
-          "http://openlibrary.org/images/button-checked-out-open-library.png"
+          "https://openlibrary.org/images/button-checked-out-open-library.png"
       };
       if (bookdata.items.length == 0) {
         return false;
