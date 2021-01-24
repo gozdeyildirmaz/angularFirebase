@@ -29,7 +29,7 @@ export class NavbarComponent implements OnInit {
       filter<NavigationEnd>(e => e instanceof NavigationEnd)
     ).subscribe(
       e => {
-        console.log('URL :', e.urlAfterRedirects);
+        // console.log('URL :', e.urlAfterRedirects);
         if (e.urlAfterRedirects !== '/login' && e.urlAfterRedirects !== '/signup') {
           this.username = window.sessionStorage.getItem('username');
           this.currentHome = false;
