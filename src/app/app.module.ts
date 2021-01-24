@@ -44,7 +44,7 @@ import {EditorComponent} from './editor/editor.component';
     RouterModule.forRoot([
       {path: 'login', component: LoginComponent, canActivate: [GuardService]}, // canActivate hepsine yazıldı içinde url e göre kontroller var
       {path: 'signup', component: SignupComponent, canActivate: [GuardService]},
-      {path: 'home', component: HomeComponent},
+      {path: 'home', component: HomeComponent, canActivate: [GuardService]},
       {path: 'editor', component: EditorComponent, canActivate: [GuardService]},
       {path: 'admin', component: AdminComponent, canActivate: [GuardService]},
       {path: '**', redirectTo: '/login'}
