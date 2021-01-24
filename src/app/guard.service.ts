@@ -40,7 +40,7 @@ export class GuardService implements CanActivate {
 
     // sayfa f5'lendiğinde GlobalConstants daki user bilgisi yok olacağı için o durumu konrol edip user yok ise tekrar doldurma işlemini yaptık
     // böylece her an GlobalConstants altında user'ımız mevcut oldu.
-
+debugger;
     const authService = this.authService;
 
     const url = route.url[0].path;
