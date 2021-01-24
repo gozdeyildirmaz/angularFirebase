@@ -41,43 +41,50 @@ export class GuardService implements CanActivate {
     // sayfa f5'lendiğinde GlobalConstants daki user bilgisi yok olacağı için o durumu konrol edip user yok ise tekrar doldurma işlemini yaptık
     // böylece her an GlobalConstants altında user'ımız mevcut oldu.
 debugger;
+console.log("Guard start");
     const authService = this.authService;
 
     const url = route.url[0].path;
 
     if (url !== 'login' && url !== 'signup' && url !== '/') {
       if (GlobalConstants.getUser() == null) {
-
+        console.log("Guard 1");
         return authService.verifySession().pipe(
           tap((response) => { // tap response u olduğu gibi dönüyor??
             if (response.status === 'fail') {
+              console.log("Guard 2");
               throw ("fail");
             }
 
             // return response.status;
           }),
           concatMap((response) => {
+            console.log("Guard 3");
             return authService.getUserByEmail(window.sessionStorage.getItem('userEmail'));
           }),
           map((response): any => {
-
+            console.log("Guard 4");
             let user: any;
             user = response['docs'][0].data();
             GlobalConstants.keepUser(user);
             if ((url === 'admin' && GlobalConstants.canRouteAdmin()) || (url === 'editor' && GlobalConstants.canRouteEditor()) || url === 'home') {
+              console.log("Guard 5");
               return true;
             } else if ((url === 'admin' && !GlobalConstants.canRouteAdmin()) || (url === 'editor' && !GlobalConstants.canRouteEditor())) {
               // return 'home';
+              console.log("Guard 6");
               this.router.navigate(['/home']);
             }
 
 
           }),
           catchError((err) => {
+            console.log("Guard 7");
             this.router.navigate(['/login']);
             return err;
           }),
           map(final => {
+            console.log("Guard 8");
             if (final === true) {
               return true;
             }
@@ -151,6 +158,7 @@ debugger;
 
 
       } else {
+        console.log("Guard 9");
         if ((url === 'admin' && GlobalConstants.canRouteAdmin()) || (url === 'editor' && GlobalConstants.canRouteEditor()) || url === 'home') {
           return this.authService.verifySession().pipe(map((res) => {
             console.log(res);
